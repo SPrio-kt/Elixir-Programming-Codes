@@ -52,15 +52,38 @@ if Enum.member?(ch, "col mismatched") do
   exit(:shutdown)
 end
 
-IO.puts(Matrix.mult(mat_1, mat_2))
+# IO.puts(Matrix.mult(mat_1, mat_2))
 
-s=[]
+# s=[]
 
-b = for i <- 0..(col1-1) do
-  Enum.map(mat_2, fn s1 -> s++[Enum.at(s1, i)]  end)
-end
+# b = for i <- 0..(col1-1) do
+#   Enum.map(mat_2, fn s1 -> s++[Enum.at(s1, i)]  end)
+# end
 
-b = Enum.map(b, &List.flatten(&1))
-mat_2 = b
+# b = Enum.map(b, &List.flatten(&1))
+#mat_2 = b
+
+result =
+  Enum.reduce(0..1, [], fn i, acc1 ->
+    res =
+      Enum.reduce(0..1, [], fn j, acc2 ->
+        res =
+          Enum.reduce(0..1, [], fn k, acc3 ->
+            ele1 = Enum.at(mat_1, i) |> Enum.at(k)
+            ele2 = Enum.at(mat_2, k) |> Enum.at(j)
+            [ele1 * ele2 | acc3]
+          end)
+          |> Enum.reduce(&(&1 + &2))
+
+        [res | acc2]
+      end)
+      |> Enum.reverse()
+
+    [res | acc1]
+  end)
+  |> Enum.reverse()
+
+IO.inspect(result)
+
 
 
